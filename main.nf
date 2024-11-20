@@ -11,19 +11,6 @@
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-*/
-
-include { ATACSEQ                 } from './workflows/atacseq'
-include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
-include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_atacseq_pipeline'
-include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_atacseq_pipeline'
-include { getGenomeAttribute      } from './subworkflows/local/utils_nfcore_atacseq_pipeline'
-include { getMacsGsize            } from './subworkflows/local/utils_nfcore_atacseq_pipeline'
-
-/*
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     GENOME PARAMETER VALUES
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 */
@@ -40,6 +27,17 @@ params.tss_bed       = getGenomeAttribute('tss_bed')
 params.blacklist     = getGenomeAttribute('blacklist')
 params.mito_name     = getGenomeAttribute('mito_name')
 params.macs_gsize    = getMacsGsize(params)
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    IMPORT FUNCTIONS / MODULES / SUBWORKFLOWS / WORKFLOWS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+include { ATACSEQ                 } from './workflows/atacseq'
+include { PREPARE_GENOME          } from './subworkflows/local/prepare_genome'
+include { PIPELINE_INITIALISATION } from './subworkflows/local/utils_nfcore_atacseq_pipeline'
+include { PIPELINE_COMPLETION     } from './subworkflows/local/utils_nfcore_atacseq_pipeline'
 
 /*
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -141,6 +139,37 @@ workflow {
         params.hook_url,
         NFCORE_ATACSEQ.out.multiqc_report
     )
+}
+
+/*
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    FUNCTIONS
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+*/
+
+//
+// Get attribute from genome config file e.g. fasta
+//
+
+def getGenomeAttribute(attribute) {
+    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+        if (params.genomes[ params.genome ].containsKey(attribute)) {
+            return params.genomes[ params.genome ][ attribute ]
+        }
+    }
+    return null
+}
+
+def getMacsGsize(params) {
+    def val = null
+    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
+        if (params.genomes[ params.genome ].containsKey('macs_gsize')) {
+            if (params.genomes[ params.genome ][ 'macs_gsize' ].containsKey(params.read_length.toString())) {
+                val = params.genomes[ params.genome ][ 'macs_gsize' ][ params.read_length.toString() ]
+            }
+        }
+    }
+    return val
 }
 
 /*

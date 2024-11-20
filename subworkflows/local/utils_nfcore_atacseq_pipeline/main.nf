@@ -63,6 +63,7 @@ workflow PIPELINE_INITIALISATION {
     //
     // Custom validation for pipeline parameters
     //
+
     validateInputParameters()
 
 }
@@ -148,33 +149,6 @@ def validateInputParameters() {
 }
 
 //
-// Validate channels from input samplesheet
-//
-def validateInputSamplesheet(input) {
-    def (metas, fastqs) = input[1..2]
-
-    // Check that multiple runs of the same sample are of the same datatype i.e. single-end / paired-end
-    def endedness_ok = metas.collect { meta -> meta.single_end }.unique().size == 1
-    if (!endedness_ok) {
-        error("Please check input samplesheet -> Multiple runs of a sample must be of the same datatype i.e. single-end or paired-end: ${metas[0].id}")
-    }
-
-    return [metas[0], fastqs]
-}
-
-//
-// Get attribute from genome config file e.g. fasta
-//
-def getGenomeAttribute(attribute) {
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey(attribute)) {
-            return params.genomes[ params.genome ][ attribute ]
-        }
-    }
-    return null
-}
-
-//
 // Exit pipeline if incorrect --genome key provided
 //
 def genomeExistsError() {
@@ -187,21 +161,6 @@ def genomeExistsError() {
         error(error_string)
     }
 }
-//
-// Get macs genome size (macs_gsize)
-//
-def getMacsGsize(params) {
-    def val = null
-    if (params.genomes && params.genome && params.genomes.containsKey(params.genome)) {
-        if (params.genomes[ params.genome ].containsKey('macs_gsize')) {
-            if (params.genomes[ params.genome ][ 'macs_gsize' ].containsKey(params.read_length.toString())) {
-                val = params.genomes[ params.genome ][ 'macs_gsize' ][ params.read_length.toString() ]
-            }
-        }
-    }
-    return val
-}
-
 //
 // Generate methods description for MultiQC
 //
