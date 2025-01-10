@@ -17,6 +17,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - [[#338](https://github.com/nf-core/atacseq/issues/338)] - Check that samplesheet samples IDs do only have alphanumeric characters, dots, dashes or underscores.
 - [[#370](https://github.com/nf-core/atacseq/issues/370)] - Adding line numbers to errors messages in `bin/check_samplesheet.py`.
 - [[#381](https://github.com/nf-core/atacseq/issues/381)] - Set chromap to no shift reads by default and install `deeptools/alignmentsieve` from modules.
+- Updated pipeline template to [nf-core/tools 3.1.1](https://github.com/nf-core/tools/releases/tag/3.1.1)
 
 ### Parameters
 
@@ -27,7 +28,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 > **NB:** Parameter has been **updated** if both old and new parameter information is present.
 > **NB:** Parameter has been **added** if just the new parameter information is present.
 > **NB:** Parameter has been **removed** if parameter information isn't present.
-
 ### Software dependencies
 
 Note, since the pipeline is now using Nextflow DSL2, each process will be run with its own [Biocontainer](https://biocontainers.pro/#/registry). This means that on occasion it is entirely possible for the pipeline to be using different versions of the same tool. However, the overall software dependency changes compared to the last release have been listed below for reference.
