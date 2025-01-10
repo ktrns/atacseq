@@ -3,10 +3,8 @@
     <source media="(prefers-color-scheme: dark)" srcset="docs/images/nf-core-atacseq_logo_dark.png">
     <img alt="nf-core/atacseq" src="docs/images/nf-core-atacseq_logo_light.png">
   </picture>
-</h1>
-
-[![GitHub Actions CI Status](https://github.com/nf-core/atacseq/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/atacseq/actions/workflows/ci.yml)
-[![GitHub Actions Linting Status](https://github.com/nf-core/atacseq/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/atacseq/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/atacseq/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXXX-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.XXXXXXX)
+</h1>[![GitHub Actions CI Status](https://github.com/nf-core/atacseq/actions/workflows/ci.yml/badge.svg)](https://github.com/nf-core/atacseq/actions/workflows/ci.yml)
+[![GitHub Actions Linting Status](https://github.com/nf-core/atacseq/actions/workflows/linting.yml/badge.svg)](https://github.com/nf-core/atacseq/actions/workflows/linting.yml)[![AWS CI](https://img.shields.io/badge/CI%20tests-full%20size-FF9900?labelColor=000000&logo=Amazon%20AWS)](https://nf-co.re/atacseq/results)[![Cite with Zenodo](http://img.shields.io/badge/DOI-10.5281/zenodo.2634132-1073c8?labelColor=000000)](https://doi.org/10.5281/zenodo.2634132)
 [![nf-test](https://img.shields.io/badge/unit_tests-nf--test-337ab7.svg)](https://www.nf-test.com)
 
 [![Nextflow](https://img.shields.io/badge/nextflow%20DSL2-%E2%89%A524.04.2-23aa62.svg)](https://www.nextflow.io/)
@@ -77,7 +75,7 @@ On release, automated continuous integration tests run the pipeline on a full-si
 ## Usage
 
 > [!NOTE]
-> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow. Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
+> If you are new to Nextflow and nf-core, please refer to [this page](https://nf-co.re/docs/usage/installation) on how to set-up Nextflow.Make sure to [test your setup](https://nf-co.re/docs/usage/introduction#how-to-run-a-pipeline) with `-profile test` before running the workflow on actual data.
 
 To run on your data, prepare a tab-separated samplesheet with your input data. Please follow the [documentation on samplesheets](https://nf-co.re/atacseq/usage#samplesheet-input) for more details. An example samplesheet for running the pipeline looks as follows:
 
