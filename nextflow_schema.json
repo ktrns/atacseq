@@ -1,10 +1,10 @@
 {
-    "$schema": "http://json-schema.org/draft-07/schema",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
     "$id": "https://raw.githubusercontent.com/nf-core/atacseq/master/nextflow_schema.json",
     "title": "nf-core/atacseq pipeline parameters",
     "description": "ATACSeq peak-calling and differential analysis pipeline.",
     "type": "object",
-    "definitions": {
+    "$defs": {
         "input_output_options": {
             "title": "Input/output options",
             "type": "object",
@@ -15,9 +15,10 @@
                 "input": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
+                    "schema": "assets/schema_input.json",
                     "mimetype": "text/csv",
                     "pattern": "^\\S+\\.csv$",
-                    "schema": "assets/schema_input.json",
                     "description": "Path to comma-separated file containing information about the samples in the experiment.",
                     "help_text": "You will need to create a samplesheet with information about the samples in your experiment before running the pipeline. Use this parameter to specify its location. It has to be a comma-separated file with 5 columns, and a header row. See [usage docs](https://nf-co.re/atacseq/docs/usage#introduction).",
                     "fa_icon": "fas fa-file-csv"
@@ -35,8 +36,9 @@
                 },
                 "read_length": {
                     "type": "integer",
-                    "description": "Read length used to calculate MACS2 genome size for peak calling if `--macs_gsize` isn't provided.",
+                    "description": "Read length used to calculate or retrieve pre-computed MACS3 genome size for peak calling if `--macs_gsize` isn't provided.",
                     "fa_icon": "fas fa-chart-area",
+                    "help_text": "Read length together with the genome fasta are used to calculate MACS3 genome size using the `khmer` program as explained [here](https://deeptools.readthedocs.io/en/develop/content/feature/effectiveGenomeSize.html#effective-genome-size). For all the genomes present in the `igenomes.config` the genome size has been already precomputed and the read length is then used to retrieve the corresponding value",
                     "enum": [50, 75, 100, 150, 200]
                 },
                 "with_control": {
@@ -80,6 +82,7 @@
                 "fasta": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.fn?a(sta)?(\\.gz)?$",
                     "description": "Path to FASTA genome file.",
@@ -89,6 +92,7 @@
                 "gtf": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.gtf(\\.gz)?$",
                     "description": "Path to GTF annotation file.",
@@ -98,6 +102,7 @@
                 "gff": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.gff(\\.gz)?$",
                     "fa_icon": "fas fa-code-branch",
@@ -106,30 +111,36 @@
                 },
                 "bwa_index": {
                     "type": "string",
+                    "format": "path",
+                    "exists": true,
                     "description": "Path to directory or tar.gz archive for pre-built BWA index.",
                     "fa_icon": "fas fa-bezier-curve"
                 },
                 "bowtie2_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Bowtie2 index."
                 },
                 "chromap_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built Chromap index."
                 },
                 "star_index": {
                     "type": "string",
                     "format": "path",
+                    "exists": true,
                     "fa_icon": "fas fa-bezier-curve",
                     "description": "Path to directory or tar.gz archive for pre-built STAR index."
                 },
                 "gene_bed": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
@@ -138,6 +149,7 @@
                 "tss_bed": {
                     "type": "string",
                     "format": "file-path",
+                    "exists": true,
                     "mimetype": "text/plain",
                     "pattern": "^\\S+\\.bed(\\.gz)?$",
                     "fa_icon": "fas fa-procedures",
@@ -145,12 +157,14 @@
                 },
                 "macs_gsize": {
                     "type": "number",
-                    "description": "Effective genome size parameter required by MACS2.",
-                    "help_text": "[Effective genome size](https://github.com/taoliu/MACS#-g--gsize) parameter required by MACS2. If using an iGenomes reference these have been provided when `--genome` is set as *GRCh37*, *GRCh38*, *GRCm38*, *WBcel235*, *BDGP6*, *R64-1-1*, *EF2*, *hg38*, *hg19* and *mm10*. For other genomes, if this parameter is not specified then the MACS2 peak-calling and differential analysis will be skipped.",
+                    "description": "Effective genome size parameter required by MACS3.",
+                    "help_text": "[Effective genome size](https://github.com/taoliu/MACS#-g--gsize) parameter required by MACS3. If using an iGenomes reference these have been provided when `--genome` is set as *GRCh37*, *GRCh38*, *GRCm38*, *WBcel235*, *BDGP6*, *R64-1-1*, *EF2*, *hg38*, *hg19* and *mm10*. For other genomes, if this parameter is not specified then the MACS3 peak-calling and differential analysis will be skipped.",
                     "fa_icon": "fas fa-arrows-alt-h"
                 },
                 "blacklist": {
                     "type": "string",
+                    "format": "path",
+                    "exists": true,
                     "description": "Path to blacklist regions in BED format, used for filtering alignments.",
                     "help_text": "If provided, alignments that overlap with the regions in this file will be filtered out (see [ENCODE blacklists](https://sites.google.com/site/anshulkundaje/projects/blacklists)). The file should be in BED format. Blacklisted regions for *GRCh37*, *GRCh38*, *GRCm38*, *hg19*, *hg38*, *mm10* are bundled with the pipeline in the [`blacklists`](../assets/blacklists/) directory, and as such will be automatically used if any of those genomes are specified with the `--genome` parameter.",
                     "fa_icon": "fas fa-book-dead"
@@ -170,10 +184,10 @@
                 "igenomes_base": {
                     "type": "string",
                     "format": "directory-path",
-                    "description": "Directory / URL base for iGenomes references.",
-                    "default": "s3://ngi-igenomes/igenomes",
-                    "fa_icon": "fas fa-cloud-download-alt",
-                    "hidden": true
+                    "description": "The base path to the igenomes reference files",
+                    "fa_icon": "fas fa-ban",
+                    "hidden": true,
+                    "default": "s3://ngi-igenomes/igenomes/"
                 },
                 "igenomes_ignore": {
                     "type": "boolean",
@@ -185,7 +199,14 @@
                 "keep_mito": {
                     "type": "boolean",
                     "description": "Reads mapping to mitochondrial contig are not filtered from alignments.",
+                    "fa_icon": "fas fa-cart-arrow-down",
                     "default": false
+                },
+                "ataqv_mito_reference": {
+                    "type": "string",
+                    "description": "Sets the value of the ataqv --mitochondrial-reference-name argument",
+                    "help_text": "By default takes the value of the mito_name parameter, if set. However, some plants and algae have chloroplast genomes in addition to a mitochondrial genome and thus mito_name can have values as multiple names that are separated by a | symbol that will break ataqv, in these cases this parameter can be used to overwrite these values.",
+                    "fa_icon": "fas fa-signature"
                 }
             }
         },
@@ -285,11 +306,13 @@
                 "save_unaligned": {
                     "type": "boolean",
                     "fa_icon": "fas fa-save",
-                    "description": "Where possible, save unaligned reads from either STAR, HISAT2 or Salmon to the results directory.",
+                    "description": "Save unaligned sequences to the output directory (only available for Bowtie 2 And STAR",
                     "help_text": "This may either be in the form of FastQ or BAM files depending on the options available for that particular tool."
                 },
                 "bamtools_filter_pe_config": {
                     "type": "string",
+                    "format": "path",
+                    "exists": true,
                     "default": "$projectDir/assets/bamtools_filter_pe.json",
                     "hidden": true,
                     "description": "BAMTools JSON file with custom filters for paired-end data.",
@@ -297,6 +320,8 @@
                 },
                 "bamtools_filter_se_config": {
                     "type": "string",
+                    "format": "path",
+                    "exists": true,
                     "default": "$projectDir/assets/bamtools_filter_se.json",
                     "hidden": true,
                     "description": "BAMTools JSON file with custom filters for single-end data.",
@@ -305,9 +330,9 @@
                 "shift_reads": {
                     "type": "boolean",
                     "fa_icon": "fas fa-chart-area",
-                    "default": true,
-                    "help_text": "Shift aligned reads as commonly done for ATACseq, +4bp for reads on the + strand, -5 bp for reads on the - strand. This can only be applied if all samples are paired-end.",
-                    "description": "Shift aligned reads (+4bp and -5bp)."
+                    "default": false,
+                    "help_text": "Shift aligned reads as commonly done for ATACseq footprinting analysis, +4 bp for reads on the + strand, -5 bp for reads on the - strand. This can only be applied if all samples are paired-end.",
+                    "description": "Shift aligned reads (+4 bp and -5 bp)."
                 }
             }
         },
@@ -319,14 +344,14 @@
             "properties": {
                 "narrow_peak": {
                     "type": "boolean",
-                    "description": "Run MACS2 in narrowPeak mode.",
-                    "help_text": "MACS2 is run by default with the [`--broad`](https://github.com/taoliu/MACS#--broad) flag. Specify this flag to call peaks in narrowPeak mode.",
+                    "description": "Run MACS3 in narrowPeak mode.",
+                    "help_text": "MACS3 is run by default with the [`--broad`](https://github.com/taoliu/MACS#--broad) flag. Specify this flag to call peaks in narrowPeak mode.",
                     "fa_icon": "fas fa-arrows-alt-h"
                 },
                 "broad_cutoff": {
                     "type": "number",
                     "default": 0.1,
-                    "description": "Specifies broad cutoff value for MACS2. Only used when --narrow_peak isnt specified.",
+                    "description": "Specifies broad cutoff value for MACS3. Only used when --narrow_peak isnt specified.",
                     "fa_icon": "fas fa-hand-scissors"
                 },
                 "macs_fdr": {
@@ -348,22 +373,27 @@
                 },
                 "save_macs_pileup": {
                     "type": "boolean",
-                    "description": "Instruct MACS2 to create bedGraph files normalised to signal per million reads.",
+                    "description": "Instruct MACS3 to create bedGraph files normalised to signal per million reads.",
                     "fa_icon": "fas fa-save"
                 },
                 "skip_peak_qc": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip MACS2 peak QC plot generation."
+                    "description": "Skip MACS3 peak QC plot generation."
                 },
                 "skip_peak_annotation": {
                     "type": "boolean",
                     "fa_icon": "fas fa-fast-forward",
-                    "description": "Skip annotation of MACS2 and consensus peaks with HOMER."
+                    "description": "Skip annotation of MACS3 and consensus peaks with HOMER."
                 },
                 "skip_consensus_peaks": {
                     "type": "boolean",
                     "description": "Skip consensus peak generation, annotation and counting.",
+                    "fa_icon": "fas fa-fast-forward"
+                },
+                "skip_merged_replicate_bigwig": {
+                    "type": "boolean",
+                    "description": "Skip generation of bigwig files for merged replicates.",
                     "fa_icon": "fas fa-fast-forward"
                 }
             }
@@ -491,41 +521,6 @@
                 }
             }
         },
-        "max_job_request_options": {
-            "title": "Max job request options",
-            "type": "object",
-            "fa_icon": "fab fa-acquisitions-incorporated",
-            "description": "Set the top limit for requested resources for any single job.",
-            "help_text": "If you are running on a smaller system, a pipeline step requesting more resources than are available may cause the Nextflow to stop the run with an error. These options allow you to cap the maximum resources requested by any single job so that the pipeline will run on your system.\n\nNote that you can not _increase_ the resources requested by any job using these options. For that you will need your own configuration file. See [the nf-core website](https://nf-co.re/usage/configuration) for details.",
-            "properties": {
-                "max_cpus": {
-                    "type": "integer",
-                    "description": "Maximum number of CPUs that can be requested for any single job.",
-                    "default": 16,
-                    "fa_icon": "fas fa-microchip",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the CPU requirement for each process. Should be an integer e.g. `--max_cpus 1`"
-                },
-                "max_memory": {
-                    "type": "string",
-                    "description": "Maximum amount of memory that can be requested for any single job.",
-                    "default": "128.GB",
-                    "fa_icon": "fas fa-memory",
-                    "pattern": "^\\d+(\\.\\d+)?\\.?\\s*(K|M|G|T)?B$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the memory requirement for each process. Should be a string in the format integer-unit e.g. `--max_memory '8.GB'`"
-                },
-                "max_time": {
-                    "type": "string",
-                    "description": "Maximum amount of time that can be requested for any single job.",
-                    "default": "240.h",
-                    "fa_icon": "far fa-clock",
-                    "pattern": "^(\\d+\\.?\\s*(s|m|h|day)\\s*)+$",
-                    "hidden": true,
-                    "help_text": "Use to set an upper-limit for the time requirement for each process. Should be a string in the format integer-unit e.g. `--max_time '2.h'`"
-                }
-            }
-        },
         "generic_options": {
             "title": "Generic options",
             "type": "object",
@@ -533,12 +528,6 @@
             "description": "Less common options for the pipeline, typically set in a config file.",
             "help_text": "These options are common to all nf-core pipelines and allow you to customise some of the core preferences for how the pipeline runs.\n\nTypically these options would be set in a Nextflow config file loaded for all pipeline runs, such as `~/.nextflow/config`.",
             "properties": {
-                "help": {
-                    "type": "boolean",
-                    "description": "Display help text.",
-                    "fa_icon": "fas fa-question-circle",
-                    "hidden": true
-                },
                 "version": {
                     "type": "boolean",
                     "description": "Display version and exit.",
@@ -598,27 +587,29 @@
                 },
                 "multiqc_config": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
                     "description": "Custom config file to supply to MultiQC.",
                     "fa_icon": "fas fa-cog",
                     "hidden": true
                 },
                 "multiqc_logo": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
                     "description": "Custom logo file to supply to MultiQC. File name must also be set in the MultiQC config file",
                     "fa_icon": "fas fa-image",
                     "hidden": true
                 },
                 "multiqc_methods_description": {
                     "type": "string",
+                    "format": "file-path",
+                    "exists": true,
+                    "mimetype": "text/plain",
                     "description": "Custom MultiQC yaml file containing HTML including a methods description.",
                     "fa_icon": "fas fa-cog"
-                },
-                "tracedir": {
-                    "type": "string",
-                    "description": "Directory to keep pipeline Nextflow logs and reports.",
-                    "default": "${params.outdir}/pipeline_info",
-                    "fa_icon": "fas fa-cogs",
-                    "hidden": true
                 },
                 "validate_params": {
                     "type": "boolean",
@@ -627,46 +618,49 @@
                     "fa_icon": "fas fa-check-square",
                     "hidden": true
                 },
-                "show_hidden_params": {
-                    "type": "boolean",
-                    "fa_icon": "far fa-eye-slash",
-                    "description": "Show all params when using `--help`",
-                    "hidden": true,
-                    "help_text": "By default, parameters set as _hidden_ in the schema are not shown on the command line when a user runs with `--help`. Specifying this option will tell the pipeline to show all parameters."
+                "pipelines_testdata_base_path": {
+                    "type": "string",
+                    "fa_icon": "far fa-check-circle",
+                    "description": "Base URL or local path to location of pipeline test dataset files",
+                    "default": "https://raw.githubusercontent.com/nf-core/test-datasets/",
+                    "hidden": true
+                },
+                "trace_report_suffix": {
+                    "type": "string",
+                    "fa_icon": "far calendar",
+                    "description": "Suffix to add to the trace report filename. Default is the date and time in the format yyyy-MM-dd_HH-mm-ss.",
+                    "hidden": true
                 }
             }
         }
     },
     "allOf": [
         {
-            "$ref": "#/definitions/input_output_options"
+            "$ref": "#/$defs/input_output_options"
         },
         {
-            "$ref": "#/definitions/reference_genome_options"
+            "$ref": "#/$defs/adapter_trimming_options"
         },
         {
-            "$ref": "#/definitions/adapter_trimming_options"
+            "$ref": "#/$defs/alignment_options"
         },
         {
-            "$ref": "#/definitions/alignment_options"
+            "$ref": "#/$defs/peak_calling_options"
         },
         {
-            "$ref": "#/definitions/peak_calling_options"
+            "$ref": "#/$defs/deseq_qc_options"
         },
         {
-            "$ref": "#/definitions/deseq_qc_options"
+            "$ref": "#/$defs/process_skipping_options"
         },
         {
-            "$ref": "#/definitions/process_skipping_options"
+            "$ref": "#/$defs/reference_genome_options"
         },
         {
-            "$ref": "#/definitions/institutional_config_options"
+            "$ref": "#/$defs/institutional_config_options"
         },
         {
-            "$ref": "#/definitions/max_job_request_options"
-        },
-        {
-            "$ref": "#/definitions/generic_options"
+            "$ref": "#/$defs/generic_options"
         }
     ]
 }
